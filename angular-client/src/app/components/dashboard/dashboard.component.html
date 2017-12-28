@@ -1,0 +1,24 @@
+<div class="container-fluid m-5">
+  <h2>Accounts</h2>    
+  <table class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Address</th>
+          <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let account of accounts; let i = index">
+        <tr>  
+          <td>{{i}}</td>
+          <td>{{account.address}}</td>
+          <td>{{account.balanceEth}} ETH</td>
+        </tr>
+    </tbody>
+  </table>
+  <div class="row">
+    <div class="col-lg-2">
+      <input type="button" class="btn btn-primary" value="Create Acccount" (click)="createAccount()" />
+    </div>
+  </div>
+</div>

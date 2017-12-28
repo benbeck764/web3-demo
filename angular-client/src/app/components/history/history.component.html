@@ -1,0 +1,44 @@
+<div class="container-fluid m-5">
+    <div class="row"><div class="col-lg-12"><h2>History</h2></div></div>
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="blockNum">Block Number</label>
+            <input id="blockNum" class="form-control" type="text" [(ngModel)]="blockNumber" (ngModelChange)="getBlock()" placeholder="ex: {{blockNumber}}"/> 
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div class="col-lg-3">
+            <input type="button" class="btn btn-primary" value="Get Block" (click)="getBlock()"/>            
+        </div>
+    </div> -->
+    <hr/>
+    <div class="row"><div class="col-lg-12"><h4>Block</h4></div></div>
+    <div class="row">
+        <div class="col-lg-12">
+          <pre>{{block | json}}</pre>
+        </div>
+    </div>
+    <hr/>
+    <div class="row"><div class="col-lg-12"><h4>Transactions</h4></div></div>
+    <table class="table table-striped" style="font-size: 11px">
+        <thead>
+            <tr>
+              <th>Hash</th>
+              <th>To</th>
+              <th>From</th>
+              <th>Value</th>
+              <th>Gas</th>
+              <th>Gas Price</th>
+        </thead>
+        <tbody *ngFor="let tx of transactions">
+            <tr>  
+              <td>{{tx.hash}}</td>
+              <td>{{tx.to}}</td>
+              <td>{{tx.from}}</td>
+              <td>{{_web3Service.toEther(tx.value)}} ETH</td>
+              <td>{{tx.gas}}</td>
+              <td>{{tx.gasPrice}}</td>
+            </tr>
+        </tbody>
+      </table>
+</div>
