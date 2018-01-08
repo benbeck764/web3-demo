@@ -1,36 +1,42 @@
-<div class="container m-5">
+<div class="container-fluid mt-3">
     <h2>Send Transaction</h2>  
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-6">
           <div class="card">
             <div class="card-block">
-              <h4 class="card-title">Widthdrawl (From)</h4>
-              <p class="card-text">Please select an account to withdraw Ether from.</p>
-              <label for="fromSelect">From Address</label>
-              <select [(ngModel)]="fromAccountAddr" class="form-control" #fromSelect>
-                  <option *ngFor="let address of accounts" value= {{address}}>
-                      {{address}}
-                  </option>
-              </select>
-              <label for="amount">Amount (ETH)</label>
-              <input id="amount" class="form-control" type="text" [(ngModel)]="amount" placeholder="ex: 52.471558"/>
+              <h4 class="card-title p-2">Widthdrawl (From)</h4>
+              <div class="p-2">
+                <p class="card-text">Please select an address to withdraw Ether from.</p>
+                <label for="fromSelect">From Address</label>
+                <select [(ngModel)]="fromAccountAddr" class="form-control" #fromSelect>
+                    <option *ngFor="let address of accounts" value= {{address}}>
+                        {{address}}
+                    </option>
+                </select>
+                <label for="amount">Amount (ETH)</label>
+                <input id="amount" class="form-control" type="text" [(ngModel)]="amount" placeholder="ex: 52.471558"/>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="card">
+        <div class="col-lg-6">
+          <div class="card h-100">
             <div class="card-block">
-              <h4 class="card-title">Deposit (To)</h4>
-              <p class="card-text">Please choose a public address to send the Ether to.</p>
-              <input class="form-control" type="text" [(ngModel)]="toAccountAddr" placeholder="ex: 0xdeB53676EA2fe1b9856F8605365f33c74fDe510e"/>
+              <h4 class="card-title p-2">Deposit (To)</h4>
+              <div class="p-2">
+                <p class="card-text">Please choose a public address to send the Ether to.</p>
+                <label for="toSelect">To Address</label>
+                <select [(ngModel)]="toAccountAddr" class="form-control" #toSelect>
+                  <option *ngFor="let address of accounts" value= {{address}}>
+                      {{address}}
+                  </option>
+                </select>
+                <!-- <input type="text" class="form-control" id="toSelect" [(ngModel)]="toAccountAddr"/> -->
+                <input type="button" class="btn btn-primary mt-4 w-100" value="Send" (click)="openTransactionModal()"/> 
+              </div>
             </div>
           </div>
         </div>
       </div>
       <hr/>
-      <div class="row">
-        <div class="col-lg-2 col-mx-lg">
-            <input type="button" class="btn btn-primary" value="Send" (click)="openTransactionModal()"/>            
-        </div>
-      </div>
 </div>

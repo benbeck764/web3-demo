@@ -1,16 +1,15 @@
-<div class="container-fluid m-5">
+<div class="container-fluid mt-3">
     <div class="row"><div class="col-lg-12"><h2>History</h2></div></div>
     <div class="row">
         <div class="col-lg-3">
             <label for="blockNum">Block Number</label>
-            <input id="blockNum" class="form-control" type="text" [(ngModel)]="blockNumber" (ngModelChange)="getBlock()" placeholder="ex: {{blockNumber}}"/> 
+            <div class="input-group margin-bottom-sm">
+                <span class="input-group-addon"><i class="fa fa-arrow-down fa-fw" (click)="decrementBlockNum()"></i></span>
+                <input id="blockNum" class="form-control" type="text" [(ngModel)]="blockNumber" (ngModelChange)="getBlock()" placeholder="ex: {{blockNumber}}"/> 
+                <span class="input-group-addon"><i class="fa fa-arrow-up fa-fw" (click)="incrementBlockNum()"></i></span>
+            </div>
         </div>
     </div>
-    <!-- <div class="row">
-        <div class="col-lg-3">
-            <input type="button" class="btn btn-primary" value="Get Block" (click)="getBlock()"/>            
-        </div>
-    </div> -->
     <hr/>
     <div class="row"><div class="col-lg-12"><h4>Block</h4></div></div>
     <div class="row">

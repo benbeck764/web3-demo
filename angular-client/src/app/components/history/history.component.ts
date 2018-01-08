@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../../services/web3.service';
 import { Block, Transaction } from 'web3/types';
 
+import * as moment from 'moment';
+
 @Component({
   selector: 'eth-history',
   templateUrl: './history.component.html',
@@ -26,7 +28,11 @@ export class HistoryComponent implements OnInit {
   getBlock() {
     this._web3Service.getBlock(this.blockNumber).subscribe((block: Block) => {
       this.block = block;
-      this.getTransactions();
+      if(this.block != null) {
+        this.getTransactions();
+      } else {
+        this.transactions = [];
+      }
     });
   }
 
@@ -43,7 +49,16 @@ export class HistoryComponent implements OnInit {
       });
     });
     this.transactions = txs;
-    console.log(txs);
+  }
+
+  decrementBlockNum() {
+    this.blockNumber--;
+    this.getBlock();
+  }
+
+  incrementBlockNum() {
+    this.blockNumber++;
+    this.getBlock();
   }
 
 }

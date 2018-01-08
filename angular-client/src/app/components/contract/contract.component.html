@@ -1,0 +1,76 @@
+<div class="container-fluid mt-3">
+  <div class="row"><div class="col-lg-12"><h2>Contracts</h2></div></div>
+  <div class="row mt">
+    <div class="col-lg-3">
+      <input type="button" class="btn btn-primary mt-4 w-100" value="Deploy SimpleStorageTest.sol" (click)="createAndDeployContract()"/> 
+    </div>
+  </div>
+  <hr/>
+  <div class="row mt-1">
+    <div class="col-lg-12">
+        <h5 *ngIf="contractState === -1">The Smart Contract has not yet initiated.</h5>
+        <h5 *ngIf="contractState === 0">The Smart Contract creation has been initiated.</h5>
+        <h5 *ngIf="contractState === 1">Smart Contract Application Binary Interface (ABI) created.</h5>
+        <h5 *ngIf="contractState === 2">Creating Web3 Contract Instance.</h5>
+        <h5 *ngIf="contractState === 3">Beginning deployment of Smart Contract to Ethereum blockchain...</h5>
+        <h5 *ngIf="contractState === 4">Smart Contract successfully deployed to the Ethereum blockchain.</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <!-- Creating ABI -->
+      <pre *ngIf="contractState === 1">{{abi | json}}</pre>
+      <!-- Creating Web3 Contract Instance -->
+      <div *ngIf="contractState === 2">
+          <h5>Contract Methods Found:</h5>
+          <div *ngFor="let method of contractMethods">
+            <h6 *ngIf="method.includes('(') && method.includes(')')">{{method}}</h6>
+          </div>
+      </div>
+      <!-- Contract Deployed -->
+      <div *ngIf="contractState === 4">
+         <h5>Contract Deployed to Address: {{contractAddress}}</h5>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <!-- Contract Deployed -->
+  <div class="row mt-5" *ngIf="contractState === 4">
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-block">
+                <h4 class="card-title p-2">set()</h4>
+                <div class="p-2">
+                    <label for="set">Value (uint)</label>
+                    <input id="set" class="form-control" type="text" [(ngModel)]="setValue" placeholder="ex: 128"/>
+                    <input type="button" class="btn btn-primary mt-4 w-100" value="Set" (click)="callSet()"/> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+              <div *ngIf="setTxHash" class="card h-100">
+                  <div class="card-block">
+                    <h4 class="card-title p-2">get()</h4>
+                    <div class="p-2">
+                        <label for="get">Value (uint)</label>
+                        <input id="get" class="form-control" type="text" [(ngModel)]="getValue" disabled/>
+                        <input type="button" class="btn btn-primary mt-4 w-100" value="Get" (click)="callGet()"/> 
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- Contract Deployed -->
+  <div class="row mt-2" *ngIf="contractState === 4">
+    <div class="col-lg-12">
+      <pre *ngIf="setTxHash">Transaction Hash: {{setTxHash}}</pre>
+      <pre *ngIf="setTxReceipt">Transaction Receipt: {{setTxReceipt | json}}</pre>
+      <pre *ngIf="setTxConfirmations">Confirmations: {{setTxConfirmations}}</pre>
+    </div>
+  </div>
+</div>

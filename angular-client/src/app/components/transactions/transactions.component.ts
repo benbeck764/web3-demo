@@ -15,12 +15,16 @@ import { access } from 'fs';
       </button>
     </div>
     <div class="modal-body">
-      <p>To: {{transaction.to}}</p>
-      <p>From: {{transaction.from}}</p>
-      <p>Amount: {{_web3Service.toEther(transaction.value)}} ETH</p>
-      <pre>{{txHash}}</pre>
+      <p><b>From:</b> {{transaction.from}}</p>
+      <p><b>To:</b> {{transaction.to}}</p>
+      <p><b>Amount:</b> {{_web3Service.toEther(transaction.value)}} ETH</p>
+      <hr *ngIf="txHash" />
+      <pre *ngIf="txHash"><b>Hash:</b> {{txHash}}</pre>
+      <hr *ngIf="txReceipt" />
+      <b *ngIf="txReceipt">Transaction Receipt:</b>
       <pre>{{txReceipt | json}}</pre>
-      <pre *ngIf="txConfirmationsNumber >= 0">Confirmations: {{txConfirmationsNumber}}</pre>
+      <hr *ngIf="txConfirmationsNumber" />
+      <pre *ngIf="txConfirmationsNumber"><b>Confirmations:</b> {{txConfirmationsNumber}}</pre>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
@@ -32,7 +36,7 @@ export class NgbdModalContent {
   @Input() transaction: Tx;
   private txHash: string;
   private txReceipt: TransactionReceipt;
-  private txConfirmationsNumber: number = -1;
+  private txConfirmationsNumber: number;
 
   constructor(public activeModal: NgbActiveModal, private _web3Service: Web3Service) {}
 
@@ -77,7 +81,7 @@ export class TransactionsComponent implements OnInit {
 
   openTransactionModal(): void {
     if(this.fromAccountAddr !== "" && this.toAccountAddr !== "" && this.amount && this.amount > 0) {
-      const modalRef = this._modalService.open(NgbdModalContent);
+      const modalRef = this._modalService.open(NgbdModalContent, { size: 'lg' });
       var transaction: Tx = {
         from: this.fromAccountAddr,
         to: this.toAccountAddr,

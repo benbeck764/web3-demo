@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule }     from '@angular/http';
+import { HttpClientModule }     from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -16,8 +16,10 @@ import { NavmenuComponent } from './components/navmenu/navmenu.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TransactionsComponent, NgbdModalContent } from './components/transactions/transactions.component';
 
+import { WindowRef } from './services/WindowRef';3
 import { Web3Service } from './services/web3.service';
 import { HistoryComponent } from './components/history/history.component';
+import { ContractComponent } from './components/contract/contract.component';
 
 @NgModule({
   declarations: [
@@ -26,11 +28,12 @@ import { HistoryComponent } from './components/history/history.component';
     DashboardComponent,
     TransactionsComponent,
     NgbdModalContent,
-    HistoryComponent
+    HistoryComponent,
+    ContractComponent
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     AppRoutingModule,
     NgbModule.forRoot()
@@ -38,7 +41,7 @@ import { HistoryComponent } from './components/history/history.component';
   entryComponents: [
     NgbdModalContent
   ],
-  providers: [Web3Service],
+  providers: [WindowRef, Web3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
