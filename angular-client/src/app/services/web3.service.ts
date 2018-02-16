@@ -42,7 +42,7 @@ export class Web3Service {
         console.log('Successfully connected Web3 instance to: ' + this.web3.currentProvider);
       }, error => {
         this.isConnected = false;
-          console.log('Error: Unable to connect Web3 instance to: ' + this.web3.currentProvider);
+        console.log('Error: Unable to connect Web3 instance to: ' + this.web3.currentProvider);
       });
 
   }

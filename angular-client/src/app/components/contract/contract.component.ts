@@ -39,35 +39,51 @@ export class ContractComponent implements OnInit {
     this.contractState = ContractState.Uninitiated;
   }
 
-  private getFromAddress(): string {
-    if(this._web3Service.isTestRPC()) {
-      return this._web3Service.getCoinBase();
-    } else if (this._web3Service.isGeth()) {
-      return this._web3Service.getCoinBase();
-    } else if (this._web3Service.isEthConsortium()) {
-      return this._web3Service.getCoinBase();
-    } else {
-      return this._web3Service.getCoinBase();
-    }
-  }
+  createAndDeployContract() {
+    this._web3Service.getContract("SimpleStorageTest.json").subscribe(res => {
 
-  callGet() {
-    this.contractInstance.methods.get().call()
-    .then((result) => {
-      this.getValue = result;
+      this.contractState = ContractState.Initiated; 
+
+      // Get the Contract JSON (Created w/ Truffle)
+      const contractJson: any = res;
+      const byteCode = contractJson.bytecode.toString();
+      this.abi = contractJson.abi;
+      this.contractState = ContractState.ABICreated; 
+
+      // Create the Contract Instance
+      const instance = this._web3Service.newContract(this.abi);
+      this.contractMethods = Object.keys(instance.methods);
+      this.contractState = ContractState.ContractInstanceCreated; 
+
+      // Deploy Contract
+      this.contractState = ContractState.DeployingContract;
+      let contractTx = instance.deploy({ data: byteCode, arguments: [] }).send({
+        from: this.getFromAddress(), 
+        gas: 2000000,
+        gasPrice: this._web3Service.toWei(30, "shannon")
+      }).then((contractInstance: Contract) => {
+        // Contract Deployed
+        this.contractState = ContractState.ContractDeployed; 
+        this.contractInstance = contractInstance;
+        this.contractAddress = contractInstance.options.address;
+      }).catch((error) => {
+        console.log(error);
+      });
     });
   }
 
   callSet() {
     if(this.setValue) {
+
       this.setTxHash = null;
       this.setTxReceipt = null;
 
-      var tx: Tx = {
+      const tx: Tx = {
         from: this.getFromAddress(),
         gas: 4000000,
         gasPrice: this._web3Service.toWei(30, "shannon").toString()
       };
+
       this.contractInstance.methods.set(this.setValue)
       .send(tx)
         .on('transactionHash', (hash: string) => {
@@ -85,42 +101,22 @@ export class ContractComponent implements OnInit {
     }
   }
 
-  createAndDeployContract() {
-    this._web3Service.getContract("SimpleStorageTest.json").subscribe(res => {
-
-      setTimeout(() => { 
-        this.contractState = ContractState.Initiated; 
-        // Get the Contract JSON (Created w/ Truffle)
-        var contractJson: any = res;
-        var byteCode = contractJson.bytecode.toString();
-        this.abi = contractJson.abi;
-
-        setTimeout(() => { 
-          this.contractState = ContractState.ABICreated; 
-          // Create the Contract Instance
-          var instance = this._web3Service.newContract(this.abi);
-          this.contractMethods = Object.keys(instance.methods);
-
-          setTimeout(() => { 
-            this.contractState = ContractState.ContractInstanceCreated; 
-            setTimeout(() => {
-              this.contractState = ContractState.DeployingContract;
-              // Deploy Contract
-              var contractTx = instance.deploy({ data: byteCode, arguments: [] }).send({
-                from: this.getFromAddress(), 
-                gas: 2000000,
-                gasPrice: this._web3Service.toWei(30, "shannon")
-              }).then((contractInstance: Contract) => {
-                this.contractState = ContractState.ContractDeployed; 
-                this.contractInstance = contractInstance;
-                this.contractAddress = contractInstance.options.address;
-              }).catch((error) => {
-                console.log(error);
-              });
-            }, 3000);
-          }, 3000);
-        }, 3000);
-      }, 100);
+  callGet() {
+    this.contractInstance.methods.get().call()
+    .then((result) => {
+      this.getValue = result;
     });
+  }
+
+  private getFromAddress(): string {
+    if(this._web3Service.isTestRPC()) {
+      return this._web3Service.getCoinBase();
+    } else if (this._web3Service.isGeth()) {
+      return this._web3Service.getCoinBase();
+    } else if (this._web3Service.isEthConsortium()) {
+      return this._web3Service.getCoinBase();
+    } else {
+      return this._web3Service.getCoinBase();
+    }
   }
 }
