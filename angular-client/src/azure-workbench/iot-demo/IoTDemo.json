@@ -1,0 +1,214 @@
+{
+  "ApplicationName": "IoTDemo",
+  "DisplayName": "IoT & Blockchain Demo",
+  "Description": "A supply chain demo for providing IoT telemetry and counterparty transference.",
+  "ApplicationRoles": [
+    {
+      "Name": "Counterparty",
+      "Description": "The Counterparty with current ownership of the supply chain payload."
+    },
+    {
+      "Name": "IoTDevice",
+      "Description": "Simulation of an IoT Device transmitting telemetry information of the current Counterparty."
+    }
+  ],
+  "Workflows": [
+    {
+      "Name": "IoTDemo",
+      "DisplayName": "IoT & Blockchain Supply Chain Demo",
+      "Description": "A supply chain demo for providing IoT telemetry and counterparty transference.",
+      "Initiators": [ "Counterparty" ],
+      "StartState": "Created",
+      "Properties": [
+        {
+          "Name": "State",
+          "DisplayName": "Payload State",
+          "Description": "The state of the payload (package).",
+          "Type": {
+            "Name": "state"
+          }
+        },
+        {
+          "Name": "InitiatingCounterparty",
+          "DisplayName": "Initiating Counterparty",
+          "Description": "The Counterparty initiating the Supply Chain workflow.",
+          "Type": {
+            "Name": "Counterparty"
+          }
+        },
+        {
+          "Name": "CurrentCounterparty",
+          "DisplayName": "Current Counterparty",
+          "Description": "The Counterparty with current ownership of the Supply Chain payload.",
+          "Type": {
+            "Name": "Counterparty"
+          }
+        },
+        {
+          "Name": "PreviousCounterparty",
+          "DisplayName": "Previous Counterparty",
+          "Description": "The Counterparty with previous ownership of the Supply Chain payload.",
+          "Type": {
+            "Name": "Counterparty"
+          }
+        },
+        {
+          "Name": "CurrentIoTDevice",
+          "DisplayName": "Current IoT Device",
+          "Description": "An IoT Device belong to the Counterparty with current ownership of the Supply Chain payload.",
+          "Type": {
+            "Name": "IoTDevice"
+          }
+        },
+        {
+          "Name": "VehicleId",
+          "DisplayName": "Vehicle ID",
+          "Description": "The unique identifier of the current Counterparty's Vehicle containing the payload.",
+          "Type": {
+            "Name": "string"
+          }
+        },
+        {
+          "Name": "Temperature",
+          "DisplayName": "Temperature",
+          "Description": "The latest Temperature of the Vehicle payload transmitted via CurrentIoTDevice.",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "Humidity",
+          "DisplayName": "Humidity",
+          "Description": "The latest Humidity of the Vehicle payload transmitted via CurrentIoTDevice.",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "AccelX",
+          "DisplayName": "AccelX",
+          "Description": "The latest AccelX of the Vehicle payload transmitted via CurrentIoTDevice.",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "AccelY",
+          "DisplayName": "AccelY",
+          "Description": "The latest AccelY of the Vehicle payload transmitted via CurrentIoTDevice.",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "AccelZ",
+          "DisplayName": "AccelZ",
+          "Description": "The latest AccelZ of the Vehicle payload transmitted via CurrentIoTDevice.",
+          "Type": {
+            "Name": "int"
+          }
+        },
+        {
+          "Name": "DateTimeRecorded",
+          "DisplayName": "DateTime",
+          "Description": "The latest DateTime of the Vehicle payload transmitted via CurrentIoTDevice.",
+          "Type": {
+            "Name": "time"
+          }
+        },
+        {
+          "Name": "ComplianceStatus",
+          "DisplayName": "Compliance Status",
+          "Description": "A boolean indicating whether or not the current payload is in the OutOfCompiliance state.",
+          "Type": {
+            "Name": "bool"
+          }
+        },
+        {
+          "Name": "ComplianceDetail",
+          "DisplayName": "Compliance Details",
+          "Description": "The details of an OutOfCompiliance state payload.",
+          "Type": {
+            "Name": "string"
+          }
+        }
+      ],
+      "Constructor": {
+        "Parameters": [
+          {
+            "Name": "device",
+            "Description": "An IoT Device belong to the Counterparty with current ownership of the Supply Chain payload.",
+            "DisplayName": "Current IoT Device",
+            "Type": {
+              "Name": "IoTDevice"
+            }
+          }
+        ]
+      },
+      "Functions": [
+        {
+          "Name": "TransferResponsibility",
+          "DisplayName": "Transfer Responsibility",
+          "Description": "Represent the transference of the Supply Chain payload from one Counterparty to another.",
+          "Parameters": [
+            {
+              "Name": "newCounterparty",
+              "Description": "The new CounterParty taking responsibility and ownership of the Supply Chain payload.",
+              "DisplayName": "New Counterparty",
+              "Type": {
+                "Name": "Counterparty"
+              }
+            }
+          ]
+        }
+      ],
+      "States": [
+        {
+          "Name": "Created",
+          "DisplayName": "Created",
+          "Description": "Indicates a new Smart Contract has been initiated for a Counterparty.",
+          "PercentComplete": 5,
+          "Value": 0,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": ["Counterparty"],
+              "AllowedInstanceRoles": [],
+              "Description": "...",
+              "Function": "TransferResponsibility",
+              "NextStates": [ "InTransit" ],
+              "DisplayName": "Transfer Responsibility"
+            }
+          ]
+        },
+        {
+          "Name": "InTransit",
+          "DisplayName": "In Transit",
+          "Description": "Indicates that a Supply Chain payload is now in transit.",
+          "PercentComplete": 25,
+          "Value": 1,
+          "Style": "Success",
+          "Transitions": []
+        },
+        {
+          "Name": "Completed",
+          "DisplayName": "Completed",
+          "Description": "Indicates that the Supply Chain workflow has been successfully completed.",
+          "PercentComplete": 100,
+          "Value": 2,
+          "Style": "Success",
+          "Transitions": []
+        },
+        {
+          "Name": "OutOfCompliance",
+          "DisplayName": "Out Of Compliance",
+          "Description": "Indicates that a Supply Chain payload is out of compliance due to ingested IoT telemetry.",
+          "PercentComplete": 100,
+          "Value": 3,
+          "Style": "Failure",
+          "Transitions": []
+        }
+      ]
+    }
+  ]
+}

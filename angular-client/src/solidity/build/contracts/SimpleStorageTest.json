@@ -345,7 +345,7 @@
     "12345": {
       "events": {},
       "links": {},
-      "address": "0xe205edac6607ddf69299a0fc9a37a476b8388027"
+      "address": "0xb670dc3fd6f7df0d5fe9a3fc84637044484410fe"
     },
     "1515604916202": {
       "events": {},
@@ -354,5 +354,5 @@
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-30T17:44:54.228Z"
+  "updatedAt": "2018-04-23T20:26:38.954Z"
 }

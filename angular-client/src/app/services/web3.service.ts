@@ -24,7 +24,7 @@ export class Web3Service {
 
   private web3: Web3;
   private web3Accounts;
-  private web3Url = BlockChainProviders.TestRPC
+  private web3Url = BlockChainProviders.EthereumConsortium
   
   private coinBase: string;
   private isConnected: boolean = false;

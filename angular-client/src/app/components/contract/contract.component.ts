@@ -59,7 +59,7 @@ export class ContractComponent implements OnInit {
       this.contractState = ContractState.DeployingContract;
       let contractTx = instance.deploy({ data: byteCode, arguments: [] }).send({
         from: this.getFromAddress(), 
-        gas: 2000000,
+        gas: 4000000,
         gasPrice: this._web3Service.toWei(30, "shannon")
       }).then((contractInstance: Contract) => {
         // Contract Deployed
