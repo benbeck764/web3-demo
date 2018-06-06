@@ -8,7 +8,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarResponsive">
     <ul class="navbar-nav navbar-sidenav">
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard" [routerLinkActive]="['link-active']">
+      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Accounts" [routerLinkActive]="['link-active']">
         <a class="nav-link" [routerLink]="['/dashboard']">
           <i class="fa fa-fw fa-users"></i>
           <span class="nav-link-text">
@@ -16,7 +16,7 @@
           </span>
         </a>
       </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard" [routerLinkActive]="['link-active']">
+      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Send Transaction" [routerLinkActive]="['link-active']">
         <a class="nav-link" [routerLink]="['/transactions']">
           <i class="fa fa-fw fa-usd"></i>
           <span class="nav-link-text">
@@ -24,7 +24,7 @@
           </span>
         </a>
       </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard" [routerLinkActive]="['link-active']">
+      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Transaction History" [routerLinkActive]="['link-active']">
         <a class="nav-link" [routerLink]="['/history']">
           <i class="fa fa-fw fa-list-alt"></i>
           <span class="nav-link-text">
@@ -32,11 +32,19 @@
           </span>
         </a>
       </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard" [routerLinkActive]="['link-active']">
+      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Contracts" [routerLinkActive]="['link-active']">
         <a class="nav-link" [routerLink]="['/contract']">
           <i class="fa fa-fw fa-file-text-o"></i>
           <span class="nav-link-text">
             Contracts
+          </span>
+        </a>
+      </li>
+      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Telemetry" [routerLinkActive]="['link-active']">
+        <a class="nav-link" [routerLink]="['/telemetry']">
+          <i class="fa fa-fw fa-truck"></i>
+          <span class="nav-link-text">
+            Telemetry
           </span>
         </a>
       </li>

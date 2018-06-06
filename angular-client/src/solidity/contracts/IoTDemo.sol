@@ -1,27 +1,6 @@
-pragma solidity ^0.4.20;
+pragma solidity ^0.4.18;
 
-contract WorkbenchBase {
-    event WorkbenchContractCreated(string applicationName, string workflowName, address originatingAddress);
-    event WorkbenchContractUpdated(string applicationName, string workflowName, string action, address originatingAddress);
-
-    string internal ApplicationName;
-    string internal WorkflowName;
-
-    function WorkbenchBase(string applicationName, string workflowName) internal {
-        ApplicationName = applicationName;
-        WorkflowName = workflowName;
-    }
-
-    function ContractCreated() internal {
-        WorkbenchContractCreated(ApplicationName, WorkflowName, msg.sender);
-    }
-
-    function ContractUpdated(string action) internal {
-        WorkbenchContractUpdated(ApplicationName, WorkflowName, action, msg.sender);
-    }
-}
-
-contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
+contract IoTDemo {
 
     enum StateType 
     { 
@@ -46,6 +25,7 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
     int public AccelX;
     int public AccelY;
     int public AccelZ;
+    string public PositionFromBeacons;
     uint public DateTimeRecorded;
 
     int private MinTemperature = 0;
@@ -56,25 +36,19 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
     bool public ComplianceStatus;
     string public ComplianceDetail;
 
-    function IoTDemo(address device) public {
+    function IoTDemo() public {
         ComplianceStatus = true;
         InitiatingCounterparty = msg.sender;
         CurrentCounterparty = InitiatingCounterparty;
-        CurrentIoTDevice = device;
         State = StateType.Created;
-
-        ContractCreated();
     }
 
-    function IngestTelemetry(string vehicleId, int humidity, int temperature, int accelX, int accelY, int accelZ) public {
-        if (CurrentIoTDevice != msg.sender || State == StateType.OutOfCompliance || State == StateType.Completed) {
-            revert();
-        }
-
+    function IngestTelemetry(string vehicleId, int humidity, int temperature, string beaconData, int accelX, int accelY, int accelZ) public {
         DateTimeRecorded = now;
         VehicleId = vehicleId;
         Humidity = humidity;
         Temperature = temperature;
+        PositionFromBeacons = beaconData;
         AccelX = accelX;
         AccelY = accelY;
         AccelZ = accelZ;
@@ -90,8 +64,6 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
         if (ComplianceStatus == false) {
             State = StateType.OutOfCompliance;
         }
-
-        ContractUpdated("IngestTelemetry");
     }
 
     function TransferToMinneapolis() public {
@@ -108,8 +80,6 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
         }
 
         PreviousCounterparty = CurrentCounterparty;
-
-        ContractUpdated("TransferToMinneapolis");
     }
 
     function TransferToMilwaukee(address newCounterparty, address newDevice) public {
@@ -126,8 +96,6 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
         PreviousCounterparty = CurrentCounterparty;
         CurrentCounterparty = newCounterparty;
         CurrentIoTDevice = newDevice;
-
-        ContractUpdated("TransferToMilwaukee");
     }
 
     function TransferToChicago(address newCounterparty) public {
@@ -143,8 +111,6 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
     
         PreviousCounterparty = CurrentCounterparty;
         CurrentCounterparty = newCounterparty;
-
-        ContractUpdated("TransferToChicago");
     }
 
     function Complete() public {
@@ -159,7 +125,5 @@ contract IoTDemo is WorkbenchBase("IoTDemo", "IoTDemo") {
         State = StateType.Completed;
         PreviousCounterparty = CurrentCounterparty;
         CurrentCounterparty = 0x0;
-
-        ContractUpdated("Complete");
     }
 }

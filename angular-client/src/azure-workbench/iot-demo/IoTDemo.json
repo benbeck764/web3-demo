@@ -22,7 +22,7 @@
       "Properties": [
         {
           "Name": "State",
-          "DisplayName": "Payload State",
+          "DisplayName": "State",
           "Description": "The state of the payload (package).",
           "Type": {
             "Name": "state"
@@ -147,9 +147,38 @@
       },
       "Functions": [
         {
-          "Name": "TransferResponsibility",
-          "DisplayName": "Transfer Responsibility",
-          "Description": "Represent the transference of the Supply Chain payload from one Counterparty to another.",
+          "Name": "TransferToMinneapolis",
+          "DisplayName": "Transfer To Minneapolis",
+          "Description": "Represent the transference of the Supply Chain payload to the Minneapolis Counterparty.",
+          "Parameters": []
+        },
+        {
+          "Name": "TransferToMilwaukee",
+          "DisplayName": "Transfer To Milwaukee",
+          "Description": "Represent the transference of the Supply Chain payload to the Milwaukee Counterparty.",
+          "Parameters": [
+            {
+              "Name": "newCounterparty",
+              "Description": "The new CounterParty taking responsibility and ownership of the Supply Chain payload.",
+              "DisplayName": "New Counterparty",
+              "Type": {
+                "Name": "Counterparty"
+              }
+            },
+            {
+              "Name": "newDevice",
+              "Description": "The new IotDevice sending telemetry data of the Supply Chain payload.",
+              "DisplayName": "New IoT Device",
+              "Type": {
+                "Name": "IoTDevice"
+              }
+            }
+          ]
+        },
+        {
+          "Name": "TransferToChicago",
+          "DisplayName": "Transfer To Chicago",
+          "Description": "Represent the transference of the Supply Chain payload to the Chicago Counterparty.",
           "Parameters": [
             {
               "Name": "newCounterparty",
@@ -160,6 +189,67 @@
               }
             }
           ]
+        },
+        {
+          "Name": "IngestTelemetry",
+          "DisplayName": "Ingest IoT Device Telemetry",
+          "Description": "Simulates an IoT Device sending telemetry data from a Supply Chain Vehicle.",
+          "Parameters": [ 
+            {
+              "Name": "vehicleId",
+              "Description": "The unique identifier of the Vehicle with the IoT Device.",
+              "DisplayName": "Vehicle ID",
+              "Type": {
+                "Name": "string"
+              }
+            },
+            {
+              "Name": "humidity",
+              "Description": "Humidity of the payload.",
+              "DisplayName": "Humidity",
+              "Type": {
+                "Name": "int"
+              }
+            },
+            {
+              "Name": "temperature",
+              "Description": "Temperature of the payload.",
+              "DisplayName": "Temperature",
+              "Type": {
+                "Name": "int"
+              }
+            },
+            {
+              "Name": "accelX",
+              "Description": "AccelX",
+              "DisplayName": "AccelX",
+              "Type": {
+                "Name": "int"
+              }
+            },
+            {
+              "Name": "accelY",
+              "Description": "AccelY",
+              "DisplayName": "AccelY",
+              "Type": {
+                "Name": "int"
+              }
+            },
+            {
+              "Name": "accelZ",
+              "Description": "AccelZ",
+              "DisplayName": "AccelZ",
+              "Type": {
+                "Name": "int"
+              }
+            }
+          ]
+        },
+        {
+          "Name": "Complete",
+          "DisplayName": "Complete",
+          "Description": "Completes the IoT Supply Chain workflow.",
+          "Parameters": []
         }
       ],
       "States": [
@@ -172,30 +262,87 @@
           "Style": "Success",
           "Transitions": [
             {
-              "AllowedRoles": ["Counterparty"],
-              "AllowedInstanceRoles": [],
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["InitiatingCounterparty"],
               "Description": "...",
-              "Function": "TransferResponsibility",
-              "NextStates": [ "InTransit" ],
-              "DisplayName": "Transfer Responsibility"
+              "Function": "TransferToMinneapolis",
+              "NextStates": [ "InTransitFromMinneapolis" ],
+              "DisplayName": "Transfer To Minneapolis"
             }
           ]
         },
         {
-          "Name": "InTransit",
-          "DisplayName": "In Transit",
-          "Description": "Indicates that a Supply Chain payload is now in transit.",
+          "Name": "InTransitFromMinneapolis",
+          "DisplayName": "In Transit From Minneapolis",
+          "Description": "Indicates that a Supply Chain payload is now in transit from Minneapolis.",
           "PercentComplete": 25,
-          "Value": 1,
           "Style": "Success",
-          "Transitions": []
+          "Transitions": [
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["InitiatingCounterparty"],
+              "Description": "...",
+              "Function": "TransferToMilwaukee",
+              "NextStates": [ "InTransitFromMilwaukee" ],
+              "DisplayName": "Transfer To Minneapolis"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": [ "CurrentIoTDevice" ],
+              "Description": "...",
+              "Function": "IngestTelemetry",
+              "NextStates": [ "OutOfCompliance", "InTransitFromMilwaukee" ],
+              "DisplayName": "Ingest Telemetry"
+            }
+          ]
+        },
+        {
+          "Name": "InTransitFromMilwaukee",
+          "DisplayName": "In Transit From Milwaukee",
+          "Description": "Indicates that a Supply Chain payload is now in transit from Milwaukee.",
+          "PercentComplete": 50,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": ["Counterparty"],
+              "AllowedInstanceRoles": [],
+              "Description": "...",
+              "Function": "TransferToChicago",
+              "NextStates": [ "ReceivedInChicago" ],
+              "DisplayName": "Transfer To Chicago"
+            },
+            {
+              "AllowedRoles": [],
+              "AllowedInstanceRoles": ["CurrentIoTDevice"],
+              "Description": "...",
+              "Function": "IngestTelemetry",
+              "NextStates": [ "OutOfCompliance", "InTransitFromMilwaukee" ],
+              "DisplayName": "Ingest Telemetry"
+            }
+          ]
+        },
+        {
+          "Name": "ReceivedInChicago",
+          "DisplayName": "Received In Chicago",
+          "Description": "Indicates that the Supply Chain payload has been received at the final destination (Chicago).",
+          "PercentComplete": 75,
+          "Style": "Success",
+          "Transitions": [
+            {
+              "AllowedRoles": ["Counterparty"],
+              "AllowedInstanceRoles": [],
+              "Description": "...",
+              "Function": "Complete",
+              "NextStates": [ "Completed" ],
+              "DisplayName": "Complete"
+            }
+          ]
         },
         {
           "Name": "Completed",
           "DisplayName": "Completed",
-          "Description": "Indicates that the Supply Chain workflow has been successfully completed.",
+          "Description": "Indicates that the Supply Chain payload has been received at the final destination (Chicago).",
           "PercentComplete": 100,
-          "Value": 2,
           "Style": "Success",
           "Transitions": []
         },
@@ -204,7 +351,6 @@
           "DisplayName": "Out Of Compliance",
           "Description": "Indicates that a Supply Chain payload is out of compliance due to ingested IoT telemetry.",
           "PercentComplete": 100,
-          "Value": 3,
           "Style": "Failure",
           "Transitions": []
         }

@@ -18,12 +18,12 @@ module.exports = {
 
     },
     ethconsortium: {
-      host: "13.89.187.9",
+      host: "104.43.214.223",
       port: 8545,
       network_id: "*",     
       gas: 4000000,
       gasPrice: 30000000000,
-      from: ""
+      from: "0x840334C80dF7a1EE4aFaa77E2b0d4E30128dbd09"
     }
   }
 };

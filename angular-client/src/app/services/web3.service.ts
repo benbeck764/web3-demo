@@ -16,7 +16,7 @@ export class Account {
 export enum BlockChainProviders {
   TestRPC = "http://localhost:8545",
   Geth = "http://52.165.165.118:8545",
-  EthereumConsortium = "http://13.89.187.9:8545"
+  EthereumConsortium = "http://104.43.214.223:8545"
 }
 
 @Injectable()
@@ -24,7 +24,7 @@ export class Web3Service {
 
   private web3: Web3;
   private web3Accounts;
-  private web3Url = BlockChainProviders.EthereumConsortium
+  private web3Url = BlockChainProviders.Geth
   
   private coinBase: string;
   private isConnected: boolean = false;
@@ -102,6 +102,10 @@ export class Web3Service {
   /// TYPE HELPERS ///
   toHex(val: any) : string {
     return this.web3.utils.toHex(val);
+  }
+
+  toAscii(val: any): string {
+    return this.web3.utils.toAscii(val);
   }
 
   /// INTERNAL HELPERS ///

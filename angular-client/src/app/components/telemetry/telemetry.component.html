@@ -1,0 +1,27 @@
+<div class="container-fluid mt-3">
+  <table class="table table-striped" style="font-size: 11px">
+    <thead>
+        <tr>
+          <th>Hash</th>
+          <th>Vehicle ID</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Beacon Positioning</th>
+          <th>AccelX</th>
+          <th>AccelY</th>
+          <th>AccelZ</th>
+    </thead>
+    <tbody *ngFor="let tx of transactions">
+        <tr>  
+          <td>{{tx.hash}}</td>
+          <td>{{tx.vehicleId}}</td>
+          <td>{{tx.temperature}}</td>
+          <td>{{tx.humidity}}</td>
+          <td>{{tx.positionFromBeacons}}</td>
+          <td>{{tx.accelX}}</td>
+          <td>{{tx.accelY}}</td>
+          <td>{{tx.accelZ}}</td>
+        </tr>
+    </tbody>
+  </table>
+<div>

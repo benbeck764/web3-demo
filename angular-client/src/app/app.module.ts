@@ -20,6 +20,7 @@ import { WindowRef } from './services/WindowRef';3
 import { Web3Service } from './services/web3.service';
 import { HistoryComponent } from './components/history/history.component';
 import { ContractComponent } from './components/contract/contract.component';
+import { TelemetryComponent } from './components/telemetry/telemetry.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ContractComponent } from './components/contract/contract.component';
     TransactionsComponent,
     NgbdModalContent,
     HistoryComponent,
-    ContractComponent
+    ContractComponent,
+    TelemetryComponent
   ],
   imports: [
     BrowserModule,
