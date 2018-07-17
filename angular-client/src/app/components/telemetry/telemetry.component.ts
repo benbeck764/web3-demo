@@ -4,6 +4,7 @@ import { Web3Service } from '../../services/web3.service';
 import * as InputDataDecoder from 'ethereum-input-data-decoder';
 
 export class TelemetryTransaction implements Transaction {
+  timestamp: number
   hash: string
   nonce: number
   blockHash: string
@@ -48,40 +49,43 @@ export class TelemetryComponent implements OnInit {
 
     const decoder = new InputDataDecoder(this.ingestTelemetryFunctionAbi);
     let txHashes: Array<any> = [];
+
     for(let i = 0; i < 100; i++) {
       this._web3Service.getBlock(startingBlock - i).subscribe((block: Block) => {
         if(block.transactions.length > 0) {
-          for(let b = 0; b < block.transactions.length; b++) {
-            this._web3Service.getTransaction(block.transactions[b].toString()).subscribe((tx: Transaction) => {
-
+          block.transactions.forEach((blockTx: Transaction) => {
+            this._web3Service.getTransaction(blockTx.toString()).subscribe((tx: Transaction) => {
               const decodedTxParams = decoder.decodeData(tx.input);
-              let telemetryTx: TelemetryTransaction = {
-                hash: tx.hash,
-                nonce: tx.nonce,
-                blockHash: tx.blockHash,
-                blockNumber: tx.blockNumber,
-                transactionIndex: tx.transactionIndex,
-                from: tx.from,
-                to: tx.to,
-                value: tx.value,
-                gasPrice: tx.gasPrice,
-                gas: tx.gas,
-                input: tx.input,
-                v: tx.v,
-                r: tx.r,
-                s: tx.s,
-                vehicleId: decodedTxParams.inputs[0],
-                temperature: decodedTxParams.inputs[1].words[0],
-                humidity: decodedTxParams.inputs[2].words[0],
-                positionFromBeacons: decodedTxParams.inputs[3],
-                accelX: decodedTxParams.inputs[4].words[0],
-                accelY: decodedTxParams.inputs[5].words[0],
-                accelZ: decodedTxParams.inputs[6].words[0],
+              if (decodedTxParams.inputs) {
+                console.log(decodedTxParams.inputs);
+                let telemetryTx: TelemetryTransaction = {
+                  timestamp: block.timestamp,
+                  hash: tx.hash,
+                  nonce: tx.nonce,
+                  blockHash: tx.blockHash,
+                  blockNumber: tx.blockNumber,
+                  transactionIndex: tx.transactionIndex,
+                  from: tx.from,
+                  to: tx.to,
+                  value: tx.value,
+                  gasPrice: tx.gasPrice,
+                  gas: tx.gas,
+                  input: tx.input,
+                  v: tx.v,
+                  r: tx.r,
+                  s: tx.s,
+                  vehicleId: decodedTxParams.inputs[0],
+                  temperature: decodedTxParams.inputs[1].words[0],
+                  humidity: decodedTxParams.inputs[2].words[0],
+                  positionFromBeacons: decodedTxParams.inputs[3],
+                  accelX: decodedTxParams.inputs[4].words[0],
+                  accelY: decodedTxParams.inputs[5].words[0],
+                  accelZ: decodedTxParams.inputs[6].words[0]     
+                }
+                this.transactions.push(telemetryTx);
               }
-
-              this.transactions.push(telemetryTx);
             });
-          }
+          });
         }
       });
     }
